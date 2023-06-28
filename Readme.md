@@ -17,5 +17,5 @@ simple filtering => let product = await Product.find(req.query)
 
 filtering -> sorting -> limiting -> pagination
 
-
-3 : 35
+5. password reset
+npm i crypto
