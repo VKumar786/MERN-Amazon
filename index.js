@@ -4,9 +4,11 @@ const { notFound, errorHandler } = require('./middlewares/errorHandler')
 const bodyParser = require('body-parser')
 const express = require('express')
 const cookieParser = require('cookie-parser')
+const morgan = require('morgan')
 const app = express()
 
 //* for post request
+app.use(morgan("dev"))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
     extended: false,

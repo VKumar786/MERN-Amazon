@@ -9,4 +9,13 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWFlODgxMDkxNWJlMzU4M2JmZGM5ZiI
 3. refresh token
 npm i cookie-parser
 
-2 : 17
+4. npm i morgan slugify
+
+morgan is used to know how much time did it take
+http://localhost:5173/api/product/?price=2500&brand=Tata
+simple filtering => let product = await Product.find(req.query)
+
+filtering -> sorting -> limiting -> pagination
+
+
+3 : 35
