@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const generateToken = require('../config/jwtToken')
 const asyncHandler = require('express-async-handler')
+const validateMongoDbId = require('../utils/validateMongodbId')
 
 //* Register user
 const createUser = asyncHandler(async (req, res) => {
@@ -49,9 +50,10 @@ const getAllUser = asyncHandler(async (req, res) => {
 
 //* Get single user
 const getaUser = asyncHandler(async (req, res) => {
+  let { _id } = req.user
+  validateMongoDbId(_id)
   try {
-    let { id } = req.params
-    const user = await User.findById(id)
+    let user = await User.find({ _id })
     res.json(user)
   } catch (error) {
     throw new Error(error)
@@ -60,12 +62,10 @@ const getaUser = asyncHandler(async (req, res) => {
 
 //* Delete a user
 const deleteaUser = asyncHandler(async (req, res) => {
+  let { _id } = req.user
+  validateMongoDbId(_id)
   try {
-    let { id } = req.params
-    let user = await User.findById(id)
-    if (!user) throw new Error("Invalid Credential")
-
-    user = await User.findByIdAndDelete(id)
+    let user = await User.findByIdAndDelete(_id)
     res.json(user)
   } catch (error) {
     throw new Error(error)
@@ -74,17 +74,47 @@ const deleteaUser = asyncHandler(async (req, res) => {
 
 //* Update a user 
 const updateaUser = asyncHandler(async (req, res) => {
+  let { _id } = req.user
+  validateMongoDbId(_id)
   try {
-    let { id } = req.params
-    let user = await User.findById(id)
-    if (!user) throw new Error("Invalid Credential")
-
-    user = await User.findByIdAndUpdate(id, {
+    let user = await User.findByIdAndUpdate(_id, {
       firstname: req?.body?.firstname,
       lastname: req?.body?.lastname,
       email: req?.body?.email,
       mobile: req?.body?.mobile,
     }, { new: true })
+    res.json(user)
+  } catch (error) {
+    throw new Error(error)
+  }
+})
+
+//* Block User
+const blockUser = asyncHandler(async (req, res) => {
+  let { id } = req.params
+  validateMongoDbId(id)
+  try {
+    let user = await User.findByIdAndUpdate(id, {
+      isBlocked: true,
+    }, {
+      new: true
+    })
+    res.json(user)
+  } catch (error) {
+    throw new Error(error)
+  }
+})
+
+//* Unblock User
+const unBlockUser = asyncHandler(async (req, res) => {
+  let { id } = req.params
+  validateMongoDbId(id)
+  try {
+    let user = await User.findByIdAndUpdate(id, {
+      isBlocked: false,
+    }, {
+      new: true
+    })
     res.json(user)
   } catch (error) {
     throw new Error(error)
@@ -98,4 +128,6 @@ module.exports = {
   getaUser,
   deleteaUser,
   updateaUser,
+  blockUser,
+  unBlockUser,
 }
