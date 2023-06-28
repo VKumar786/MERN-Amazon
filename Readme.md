@@ -19,3 +19,9 @@ filtering -> sorting -> limiting -> pagination
 
 5. password reset
 npm i crypto
+
+6. Email send node mailer
+search -> google app password
+
+cuqgvqjyjseznxgm
+fxzretlnoucgicye
