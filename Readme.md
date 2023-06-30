@@ -23,5 +23,6 @@ npm i crypto
 6. Email send node mailer
 search -> google app password
 
-cuqgvqjyjseznxgm
-fxzretlnoucgicye
+.populate() it is used to make a refrence to get populdated on that object
+
+5 : 40

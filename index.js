@@ -21,6 +21,10 @@ app.get('/', (req, res) => {
 })
 app.use('/api/user', require('./routes/authRoutes'))
 app.use('/api/product', require('./routes/productRoutes'))
+app.use('/api/blog', require('./routes/blogRoutes'))
+app.use('/api/productCategory', require('./routes/productCategoryRoutes'))
+app.use('/api/blogCategory', require('./routes/blogCategoryRoutes'))
+app.use('/api/brand', require('./routes/brandRoutes'))
 
 //* Error after all .use
 app.use(notFound)
