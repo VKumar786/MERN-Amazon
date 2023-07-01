@@ -1,4 +1,5 @@
 const Product = require('../models/productModel')
+const User = require('../models/userModel')
 const asyncHandler = require('express-async-handler')
 const slugify = require('slugify')
 
@@ -30,18 +31,18 @@ const getaProduct = asyncHandler(async (req, res) => {
 const getAllProduct = asyncHandler(async (req, res) => {
     try {
         //? filtering
-        let queryObj = {...req.query} //! imp b/c of shallow copy
+        let queryObj = { ...req.query } //! imp b/c of shallow copy
         const excludeFields = ["page", "sort", "limit", "fields"]
         excludeFields.forEach(el => delete queryObj[el])
 
         //? { price: { gt: '200', lt: '500' } } -> { "price": { "$gt": "200", "$lt": "500" } }
         let queryStr = JSON.stringify(queryObj)
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
-        
-        let query = Product.find(JSON.parse(queryStr))  
-        
+
+        let query = Product.find(JSON.parse(queryStr))
+
         //? sorting
-        if(req.query.sort) {
+        if (req.query.sort) {
             //? category,brand(query) -> category brand
             const sortBy = req.query.sort.split(',').join(' ')
             query = query.sort(sortBy)
@@ -63,9 +64,9 @@ const getAllProduct = asyncHandler(async (req, res) => {
         const page = req.query.page
         const limit = req.query.limit
         const skip = (page - 1) * limit
-        if(req.query.page) {
+        if (req.query.page) {
             const productCount = await Product.countDocuments()
-            if(skip >= productCount) throw new Error("this page don't exits")
+            if (skip >= productCount) throw new Error("this page don't exits")
         }
         query = query.skip(skip).limit(limit)
 
@@ -104,10 +105,73 @@ const deleteProduct = asyncHandler(async (req, res) => {
     }
 })
 
+const addToWishList = asyncHandler(async (req, res) => {
+    try {
+        const { _id } = req.user
+        const { prodId } = req.body
+
+        const user = await User.findById(_id)
+        const alreadyAdded = user.wishlist.find((id) => id.toString() === prodId)
+
+        if (alreadyAdded) {
+            let user = await User.findByIdAndUpdate(_id, {
+                $pull: { wishlist: prodId }
+            }, { new: true })
+            res.json(user)
+        } else {
+            let user = await User.findByIdAndUpdate(_id, {
+                $push: { wishlist: prodId }
+            }, { new: true })
+            res.json(user)
+        }
+    } catch (error) {
+        throw new Error(error)
+    }
+})
+
+const rating = asyncHandler(async (req, res) => {
+    try {
+        const { _id } = req.user;
+        const { star, prodId, comment } = req.body;
+        const product = await Product.findById(prodId);
+
+        let alreadyRated = product.ratings.find((rating) => rating.postedby.toString() === _id.toString());
+
+        if (alreadyRated) {
+            const updatedProduct = await Product.updateOne(
+                { "ratings._id": alreadyRated._id },
+                { $set: { "ratings.$.star": star, "ratings.$.comment": comment } }
+            );
+        } else {
+            const rateProduct = await Product.findByIdAndUpdate(prodId, {
+                $push: {
+                    ratings: {
+                        star: star,
+                        postedby: _id
+                    }
+                }
+            });
+        }
+        const getAllRating = await Product.findById(prodId)
+        let totalRating = getAllRating.ratings.length
+        let sumAllRating = getAllRating.ratings.map((item) => item.star).reduce((prev, curr) => prev + curr, 0)
+        let actualRating = Math.round(sumAllRating / totalRating)
+        let finalProduct = await Product.findByIdAndUpdate(prodId, {
+            totalRating: actualRating,
+        }, { new: true })
+        res.json(finalProduct)
+    } catch (error) {
+        throw new Error(error);
+    }
+});
+
+
 module.exports = {
     createProduct,
     getaProduct,
     getAllProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    addToWishList,
+    rating
 }

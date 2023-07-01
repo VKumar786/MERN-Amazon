@@ -25,4 +25,7 @@ search -> google app password
 
 .populate() it is used to make a refrence to get populdated on that object
 
-5 : 40
+7.
+rating in productCtrl ~ able to understand
+
+6 : 01
