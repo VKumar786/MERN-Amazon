@@ -24,9 +24,10 @@ let productSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    images: {
-        type: String,
-    },
+    images: [],
+    // images: {
+    //     type: Array,
+    // },
     sold: {
         type: Number,
         default: 0,

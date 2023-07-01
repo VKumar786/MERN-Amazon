@@ -25,7 +25,12 @@ search -> google app password
 
 .populate() it is used to make a refrence to get populdated on that object
 
-7.
-rating in productCtrl ~ able to understand
+7. rating in productCtrl ~ able to understand
+
+8. how to upload files
+npm i cloudinary
+npm i multer
+npm i sharp
+
 
 6 : 01

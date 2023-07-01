@@ -33,10 +33,7 @@ let blogSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "User"
     }],
-    image: {
-        type: String,
-        default: 'https://www.codeur.com/blog/wp-content/uploads/2021/03/image-tendance-blogging-1.jpg.webp'
-    },
+    images: [],
     author: {
         type: String,
         default: "Admin"
