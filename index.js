@@ -25,6 +25,7 @@ app.use('/api/blog', require('./routes/blogRoutes'))
 app.use('/api/productCategory', require('./routes/productCategoryRoutes'))
 app.use('/api/blogCategory', require('./routes/blogCategoryRoutes'))
 app.use('/api/brand', require('./routes/brandRoutes'))
+app.use('/api/cupon', require('./routes/cuponRoutes'))
 
 //* Error after all .use
 app.use(notFound)
