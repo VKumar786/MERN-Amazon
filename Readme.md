@@ -32,5 +32,7 @@ npm i cloudinary
 npm i multer
 npm i sharp
 
+9. 
 
-6 : 01
+
+7 : 28 : 12

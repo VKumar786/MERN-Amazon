@@ -44,7 +44,10 @@ let userSchema = new mongoose.Schema({
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
-    address: [{ type: mongoose.Types.ObjectId, ref: "Address" }],
+    // address: [{ type: mongoose.Types.ObjectId, ref: "Address" }],
+    address: {
+        type: String,
+    },
     wishlist: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
 }, {
     timestamps: true,
